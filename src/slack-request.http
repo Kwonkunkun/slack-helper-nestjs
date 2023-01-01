@@ -1,0 +1,13 @@
+### get channel list
+GET https://slack.com/api/conversations.list
+Authorization: Bearer {{slack_token}}
+
+### post message to slack channel
+POST https://slack.com/api/chat.postMessage
+Content-Type: application/json; charset=utf-8
+Authorization: Bearer {{slack_token}}
+
+{
+  "channel": "C04H2S8R97W",
+  "text": "테스트 post"
+}
