@@ -39,18 +39,15 @@ export class CommandService {
    */
   private isValid(fileName: string) {
     //법인명_서류이름_보내는사람_날짜 인지 체크
-    const sections = fileName.split('_');
-    if (sections.length < 4) {
+    const regex = /([^_]+)_([^_]+)_([^_]+)_(\d{6,8})/g;
+    if (!regex.test(fileName)) {
       return '❌ 파일명의 형식이 맞지 않습니다. [법인명_서류이름_보내는사람_날짜] 형식으로 작성했는지 확인해보세요!';
     }
 
+    Logger.debug(fileName);
+    regex.lastIndex = 0;
+    const [origin, ...sections] = regex.exec(fileName);
     const [corporation, docs, receiver, date] = sections;
-
-    //날짜 체크
-    const dateRegex = /^\d{6}$/;
-    if (!dateRegex.test(date)) {
-      return '❌ 날짜 형식이 맞지 않습니다.';
-    }
 
     return {
       blocks: [
@@ -146,8 +143,11 @@ export class CommandService {
   /**
    * @description text 를 확인해보고, command 의 옵션을 반환
    */
-  private getCommandOption(text: string): string | undefined {
-    const commandOption = text.split(' ')[1];
+  getCommandOption(text: string): string | undefined {
+    const commandOption = text
+      .split(' ')
+      .filter((v, idx) => idx !== 0)
+      .join(' ');
     if (!commandOption) {
       return undefined;
     }
