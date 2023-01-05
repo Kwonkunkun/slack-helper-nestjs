@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
-import { SlackController } from './slack.controller';
+import { Global, Module } from '@nestjs/common';
 import { SlackService } from './slack.service';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '../../config/config.module';
 import { ConfigService } from '@nestjs/config';
 
+@Global()
 @Module({
   imports: [
     HttpModule.registerAsync({
@@ -21,7 +21,7 @@ import { ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
   ],
-  controllers: [SlackController],
   providers: [SlackService],
+  exports: [SlackService],
 })
 export class SlackModule {}

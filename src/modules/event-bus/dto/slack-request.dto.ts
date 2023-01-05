@@ -1,17 +1,8 @@
 import { IsBoolean, IsObject, IsString } from 'class-validator';
 
-export class CheckUriVerificationDto {
-  @IsString()
-  token: string;
-
-  @IsString()
-  challenge: string;
-
-  @IsString()
-  type: string;
-}
-
-export class ReceiveMentionDto {
+export class SlackRequestDto {
+  @IsObject()
+  event: Event;
   @IsString()
   token: string;
 
@@ -23,9 +14,6 @@ export class ReceiveMentionDto {
 
   @IsString()
   Blocks: any[];
-
-  @IsObject()
-  event: Event;
 
   @IsString()
   type: string;
@@ -55,12 +43,5 @@ interface Authorization {
 }
 
 interface Event {
-  client_msg_id: string;
   type: string;
-  text: string;
-  user: string;
-  ts: string;
-  team: string;
-  channel: string;
-  event_ts: string;
 }

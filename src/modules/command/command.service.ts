@@ -28,6 +28,7 @@ export class CommandService {
         return this.help();
       case 'isValid':
         return this.isValid(commandOption);
+
       default:
         return this.invalidCommand();
     }
@@ -41,12 +42,12 @@ export class CommandService {
     //법인명_서류이름_보내는사람_날짜 인지 체크
     const regex = /([^_]+)_([^_]+)_([^_]+)_(\d{6,8})/g;
     if (!regex.test(fileName)) {
-      return '❌ 파일명의 형식이 맞지 않습니다. [법인명_서류이름_보내는사람_날짜] 형식으로 작성했는지 확인해보세요!';
+      return `❌ ${fileName}은 형식이 맞지 않습니다. \n[법인명_서류이름_보내는사람_날짜] 형식으로 작성했는지 확인해보세요!`;
     }
 
     Logger.debug(fileName);
     regex.lastIndex = 0;
-    const [origin, ...sections] = regex.exec(fileName);
+    const [, ...sections] = regex.exec(fileName);
     const [corporation, docs, receiver, date] = sections;
 
     return {
@@ -55,7 +56,7 @@ export class CommandService {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: '🎉파일 네이밍 룰에 맞는 이름이에요!!',
+            text: `🎉 ${fileName}은 파일 네이밍 룰에 맞는 이름이에요!!`,
           },
         },
         { type: 'divider' },
@@ -102,16 +103,19 @@ export class CommandService {
       blocks: [
         {
           type: 'section',
-          text: { type: 'mrkdwn', text: "Hi! I'm enlighten helper" },
+          text: {
+            type: 'mrkdwn',
+            text: '안녕하세여 저는 엔라이튼 봇이에여 크킄',
+          },
         },
         { type: 'divider' },
-        { type: 'section', text: { type: 'mrkdwn', text: '*File naming*' } },
+        { type: 'section', text: { type: 'mrkdwn', text: '*파일 네이밍 룰*' } },
         {
           type: 'section',
           fields: [
             {
               type: 'plain_text',
-              text: 'Is Valid fileNaming rule?',
+              text: '네이밍 룰에 맞는 파일 이름인지 테스트 해볼수 있는 기능',
               emoji: true,
             },
             { type: 'mrkdwn', text: '`/enlightenHelper isValid [fileName]`' },
@@ -122,7 +126,7 @@ export class CommandService {
           fields: [
             {
               type: 'plain_text',
-              text: 'show valid file name helper',
+              text: '파일 네이밍을 지어주는 기능',
               emoji: true,
             },
             { type: 'mrkdwn', text: '`/enlightenHelper fileName`' },
@@ -176,5 +180,16 @@ export class CommandService {
       }
     });
     return isValid;
+  }
+
+  /**
+   * @private
+   * @description 파일 네이밍 룰에 맞는지 확인
+   * @param fileName
+   */
+  private isValidFileName(fileName: string) {
+    //법인명_서류이름_보내는사람_날짜 인지 체크
+    const regex = /([^_]+)_([^_]+)_([^_]+)_(\d{6,8})/g;
+    return regex.test(fileName);
   }
 }

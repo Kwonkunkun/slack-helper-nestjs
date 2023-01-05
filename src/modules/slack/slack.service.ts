@@ -1,50 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
-import {
-  CheckUriVerificationDto,
-  ReceiveMentionDto,
-} from './dto/slack-request.dto';
 import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { AxiosError } from '@nestjs/terminus/dist/errors/axios.error';
 
+/**
+ * TODO: 더 구현할 사항이 있는지 체크해봐야함
+ */
 @Injectable()
 export class SlackService {
+  private readonly logger: Logger = new Logger(this.constructor.name);
   constructor(private readonly httpService: HttpService) {}
-  async receiveEvent(body: any) {
-    // Logger.debug(body);
-
-    //type: url_verification
-    if (body.type === 'url_verification') {
-      const { challenge } = body as CheckUriVerificationDto;
-      return this.healthCheck(challenge);
-    }
-
-    //type: event_callback
-    if (body.type === 'event_callback') {
-      const { event } = body as ReceiveMentionDto;
-      const { user, channel } = event;
-      await this.sendMessage(channel, 'hello world');
-    }
-
-    return 'ok';
-  }
 
   /**
-   * slack 용 uri verification event 처리
-   * @private
-   * @param challenge
-   * @returns challenge 값
-   */
-  private healthCheck(challenge: string) {
-    return challenge;
-  }
-
-  /**
-   * slack 용 mention event 처리
-   */
-
-  /**
-   * slack 에 메시지 전송
+   * @description slack 에 메시지 전송
+   * @param channel 메시지 전송할 채널
+   * @param text 메시지
    */
   async sendMessage(channel: string, text: string) {
     const { data } = await firstValueFrom(
@@ -55,12 +25,11 @@ export class SlackService {
         })
         .pipe(
           catchError((error: AxiosError) => {
-            Logger.error(error.response.data);
+            this.logger.error(error.response.data);
             throw 'An error happened!';
           }),
         ),
     );
-    Logger.debug(data);
     return data;
   }
 }

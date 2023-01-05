@@ -1,9 +1,9 @@
-import { Body, Controller, Logger, Post, Headers, Req } from '@nestjs/common';
-import { SlackService } from './slack.service';
+import { Body, Controller, Post, Req } from '@nestjs/common';
+import { EventBusService } from './event-bus.service';
 
 @Controller('slack')
-export class SlackController {
-  constructor(private readonly slackService: SlackService) {}
+export class EventBusController {
+  constructor(private readonly routerService: EventBusService) {}
 
   /**
    * TODO: 보안쪽은 일단 생략 참고링크: https://api.slack.com/authentication/verifying-requests-from-slack
@@ -11,6 +11,6 @@ export class SlackController {
    */
   @Post()
   receiveEvent(@Req() req, @Body() body: any) {
-    return this.slackService.receiveEvent(body);
+    return this.routerService.receiveEvent(body);
   }
 }
