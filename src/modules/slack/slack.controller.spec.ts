@@ -1,18 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { SlackController } from './slack.controller';
 import { SlackEventService } from './slack.event.service';
 
-describe('SlackService', () => {
-  let service: SlackEventService;
+describe('SlackController', () => {
+  let controller: SlackController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      controllers: [SlackController],
       providers: [SlackEventService],
     }).compile();
 
-    service = module.get<SlackEventService>(SlackEventService);
+    controller = module.get<SlackController>(SlackController);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(controller).toBeDefined();
   });
 });

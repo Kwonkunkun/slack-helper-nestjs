@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { HealthModule } from './modules/health/health.module';
-import { SlackModule } from './modules/slack/slack.module';
 import { ConfigModule } from './config/config.module';
 import { CommandModule } from './modules/command/command.module';
-import { EventBusModule } from './modules/event-bus/event-bus.module';
+import { SlackModule } from './modules/slack/slack.module';
+import { SlackModule as SlackListenerModule } from 'nestjs-slack-listener';
+import { ConfigService } from '@nestjs/config';
+import { FileNameModule } from './modules/file-name/file-name.module';
 
 /**
  * @module AppModule
@@ -11,11 +13,18 @@ import { EventBusModule } from './modules/event-bus/event-bus.module';
  */
 @Module({
   imports: [
-    HealthModule,
-    SlackModule,
     ConfigModule,
+    SlackListenerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        botToken: configService.get('SLACK_TOKEN'),
+      }),
+      inject: [ConfigService],
+    }),
+    HealthModule,
     CommandModule,
-    EventBusModule,
+    SlackModule,
+    FileNameModule,
   ],
   controllers: [],
   providers: [],
