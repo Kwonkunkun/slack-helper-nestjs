@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { MessageEvent } from 'nestjs-slack-listener/dist/slack/interfaces/incoming.interface';
-import { ACTION_ID, HELP_MESSAGE_BLOCK } from './slack.constants';
+import {ACTION_ID, HELP_MESSAGE_BLOCK, RULE_MESSAGE_BLOCK} from './slack.constants';
 import { InjectSlackClient, SlackClient } from 'nestjs-slack-listener';
 import { FileNameMainContractService } from '../file-name/file-name.main-contract.service';
 import { FileNameSubContractService } from '../file-name/file-name.sub-contract.service';
@@ -25,14 +25,6 @@ export class SlackEventService {
 
     //text 에 따라서 다른 handler 실행
     const { text } = event;
-
-    //도움 명령어라면
-    if (this.isHelpCommand(text)) {
-      return await this.slack.chat.postMessage({
-        channel: event.channel,
-        blocks: HELP_MESSAGE_BLOCK,
-      });
-    }
 
     //파일 이름 확인 명령어라면
     if (this.isFileNameCheckCommand(text)) {
@@ -63,10 +55,26 @@ export class SlackEventService {
       });
     }
 
+    //도움 명령어라면
+    if (this.isHelpCommand(text)) {
+      return await this.slack.chat.postMessage({
+        channel: event.channel,
+        blocks: HELP_MESSAGE_BLOCK,
+      });
+    }
+
+    //룰 확인 명령어라면
+    if (this.isRuleCommand(text)) {
+      return await this.slack.chat.postMessage({
+        channel: event.channel,
+        blocks: RULE_MESSAGE_BLOCK,
+      });
+    }
+
     //전부 해당되지 않을때
     return await this.slack.chat.postMessage({
       channel: event.channel,
-      text: `❌ '${text}'에 해당되는 기능을 찾을 수 없습니다.`,
+      text: `❌ 해당되는 기능을 찾을 수 없습니다.`,
     });
   }
 
@@ -83,6 +91,14 @@ export class SlackEventService {
    */
   private isHelpCommand(text: string) {
     const regex = /^.*(도움|help).*/g;
+    return regex.test(text);
+  }
+
+  /**
+   * @description 룰 확인 명령어인지 체크
+   */
+  private isRuleCommand(text: string) {
+    const regex = /^.*(룰|룰알려주|파일룰|rule).*/g;
     return regex.test(text);
   }
 }

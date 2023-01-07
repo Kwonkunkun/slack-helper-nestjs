@@ -1,4 +1,4 @@
-import { Controller, Logger } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { SlackEventService } from './slack.event.service';
 import {
   IncomingSlackEvent,
@@ -28,7 +28,7 @@ export class SlackController {
   @SlackEventHandler('message')
   async handleMessage({ event }: any) {
     //자기 자신일때는 return
-    if (event.bot_id) {
+    if ('bot_id' in event) {
       return;
     }
     return await this.slackEventService.handleMessage(event as MessageEvent);
@@ -39,6 +39,10 @@ export class SlackController {
    */
   @SlackEventHandler('app_mention')
   async handleAppMention({ event }: IncomingSlackEvent<MessageEvent>) {
+    //자기 자신일때는 return
+    if ('bot_id' in event) {
+      return;
+    }
     return await this.slackEventService.handleMessage(event);
   }
 

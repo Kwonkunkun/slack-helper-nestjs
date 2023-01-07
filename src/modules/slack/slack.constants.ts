@@ -39,3 +39,30 @@ export const HELP_MESSAGE_BLOCK = [
   },
   { type: 'divider' },
 ];
+
+export const RULE_MESSAGE_BLOCK =  [
+  {
+    "type": "section",
+    "text": {
+      "type": "mrkdwn",
+      "text": "👇 *룰은 다음과 같아여!*"
+    }
+  },
+  {
+    "type": "divider"
+  },
+  {
+    "type": "section",
+    "text": {
+      "type": "mrkdwn",
+      "text": "*[계약서명 규칙]* \n *주계약의 경우* : 계약상대방_계약명_자사명_체결일자 \n *부수계약의 경우* : 계약상대방_본계약명_부속계약명_자사명_체결일자"
+    }
+  },
+  {
+    "type": "section",
+    "text": {
+      "type": "mrkdwn",
+      "text": "*[예시]* \n *주계약* : 솔라원이호_자산양수도계약_솔라에쿼티코리아002_221202 \n *부수계약* : JA솔라_물품공급계약_합의서_엔라이튼_221205"
+    }
+  }
+]
