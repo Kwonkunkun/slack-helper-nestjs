@@ -20,7 +20,7 @@ export const HELP_MESSAGE_BLOCK = [
     fields: [
       {
         type: 'plain_text',
-        text: '네이밍 룰에 맞는 파일 이름인지 테스트 해볼수 있는 기능',
+        text: '룰에 맞는 파일 이름인지 테스트 해볼수 있는 기능',
         emoji: true,
       },
       { type: 'mrkdwn', text: '확인|check `[fileName]`' },
@@ -31,10 +31,10 @@ export const HELP_MESSAGE_BLOCK = [
     fields: [
       {
         type: 'plain_text',
-        text: '파일 네이밍을 지어주는 기능',
+        text: '룰을 알려주는 기능',
         emoji: true,
       },
-      { type: 'mrkdwn', text: '만들기|make' },
+      { type: 'mrkdwn', text: '룰|룰알려주|파일룰|rule' },
     ],
   },
   { type: 'divider' },

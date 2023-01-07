@@ -10,6 +10,11 @@
 export abstract class FileName {
   private regex = /([^_]+)_([^_]+)_([^_]+)_(\d{6,8})/g;
 
+  /**
+   * @protected
+   * @param regex
+   * @description regex 를 변경할 수 있도록 protected 로 설정
+   */
   protected constructor(regex?: RegExp) {
     if (regex) {
       this.regex = regex;
@@ -37,6 +42,7 @@ export abstract class FileName {
    * @description 파일 이름을 분해해서 배열로 반환
    */
   separateFileName(fileName: string): string[] {
+    this.regex.lastIndex = 0;
     return this.regex.exec(fileName).slice(1);
   }
 }
