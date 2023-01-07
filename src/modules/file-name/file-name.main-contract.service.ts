@@ -10,7 +10,7 @@ import { InjectSlackClient, SlackClient } from 'nestjs-slack-listener';
 @Injectable()
 export class FileNameMainContractService extends FileName {
   constructor() {
-    super(/([^_]+)_([^_]+)_([^_]+)_(\d{6})/g);
+    super(/^([^_]+)_([^_]+)_([^_]+)_(\d{6})/g);
   }
 
   /**
@@ -24,7 +24,7 @@ export class FileNameMainContractService extends FileName {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: `🎉 '${fileName}'은 주계약 파일 네이밍 룰에 맞는 이름이에요!!`,
+          text: `😁 '${fileName}'은 주계약 파일 네이밍 룰에 맞는 이름이에요!!`,
         },
       },
       { type: 'divider' },

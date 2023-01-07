@@ -8,7 +8,7 @@ import { SubContractFileInfo } from './interfaces';
 @Injectable()
 export class FileNameSubContractService extends FileName {
   constructor() {
-    super(/([^_]+)_([^_]+)_([^_]+)_([^_]+)_(\d{6})/g);
+    super(/^([^_]+)_([^_]+)_([^_]+)_([^_]+)_(\d{6})/g);
   }
 
   /**
@@ -22,7 +22,7 @@ export class FileNameSubContractService extends FileName {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: `🎉 '${fileName}'은 부수계약 파일 네이밍 룰에 맞는 이름이에요!!`,
+          text: `😁 '${fileName}'은 부수계약 파일 네이밍 룰에 맞는 이름이에요!!`,
         },
       },
       { type: 'divider' },

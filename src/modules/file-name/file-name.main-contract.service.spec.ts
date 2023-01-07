@@ -23,6 +23,7 @@ describe('FileNameMainContractService', () => {
       service.isValid('솔라커넥트_양도계약서_엔라이튼_950822'),
     ).toBeTruthy();
     expect(service.isValid('솔라커넥트__엔라이튼_950822')).toBeFalsy();
+    expect(service.isValid('JA솔라_물품공급계약_합의서_엔라이튼_221205')).toBeFalsy();
   });
 
   it('FileNameMainContractService getFileName', () => {
