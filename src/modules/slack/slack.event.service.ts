@@ -100,7 +100,7 @@ export class SlackEventService {
    * @description 도움 명령어인지 체크
    */
   private isHelpCommand(text: string) {
-    const regex = /^.*(도움|help).*/g;
+    const regex = /^.*(도움|help|야|헤이|hey|여).*/g;
     return regex.test(text);
   }
 

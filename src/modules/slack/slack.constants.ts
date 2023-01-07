@@ -38,6 +38,21 @@ export const HELP_MESSAGE_BLOCK = [
     ],
   },
   { type: 'divider' },
+  {
+    type: 'section',
+    text: { type: 'mrkdwn', text: '*그 외*' },
+  },
+  {
+    type: 'section',
+    fields: [
+      {
+        type: 'plain_text',
+        text: '도움이 필요할때는!',
+        emoji: true,
+      },
+      { type: 'mrkdwn', text: '도움|help|야|헤이|hey|여' },
+    ],
+  },
 ];
 
 export const RULE_MESSAGE_BLOCK =  [
