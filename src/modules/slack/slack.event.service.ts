@@ -4,6 +4,7 @@ import {ACTION_ID, HELP_MESSAGE_BLOCK, RULE_MESSAGE_BLOCK} from './slack.constan
 import { InjectSlackClient, SlackClient } from 'nestjs-slack-listener';
 import { FileNameMainContractService } from '../file-name/file-name.main-contract.service';
 import { FileNameSubContractService } from '../file-name/file-name.sub-contract.service';
+import {CusswordService} from '../cussword/cussword.service';
 
 @Injectable()
 export class SlackEventService {
@@ -12,6 +13,7 @@ export class SlackEventService {
   constructor(
     private readonly fileNameMainContractService: FileNameMainContractService,
     private readonly fileNameSubContractService: FileNameSubContractService,
+    private readonly cusswordService: CusswordService,
     @InjectSlackClient()
     private readonly slack: SlackClient,
   ) {}
@@ -51,7 +53,7 @@ export class SlackEventService {
       //파일 이름이 룰에 위배되는 경우
       return await this.slack.chat.postMessage({
         channel: event.channel,
-        text: `'${fileName}'은 파일 네이밍 룰에 위배됩니다! '룰'을 확인해주세요!.`,
+        text: `☹️'${fileName}'은 파일 네이밍 룰에 위배됩니다! '룰'을 확인해주세요!.`,
       });
     }
 
@@ -71,10 +73,18 @@ export class SlackEventService {
       });
     }
 
+    //욕설이 섞여있다면
+    if (this.cusswordService.isCussWord(text)) {
+        return await this.slack.chat.postMessage({
+            channel: event.channel,
+            text: '🫥 욕설은 마라...',
+        });
+    }
+
     //전부 해당되지 않을때
     return await this.slack.chat.postMessage({
       channel: event.channel,
-      text: `❌ 해당되는 기능을 찾을 수 없습니다.`,
+      text: `😰 해당되는 기능을 찾을 수 없습니다.`,
     });
   }
 
