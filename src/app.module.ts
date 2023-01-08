@@ -4,6 +4,7 @@ import { ConfigModule } from './config/config.module';
 import { SlackModule } from './modules/slack/slack.module';
 import { SlackModule as SlackListenerModule } from 'nestjs-slack-listener';
 import { ConfigService } from '@nestjs/config';
+import { GoogleDriveModule } from '@app/google-drive';
 
 /**
  * @module AppModule
@@ -21,6 +22,7 @@ import { ConfigService } from '@nestjs/config';
     }),
     HealthModule,
     SlackModule,
+    GoogleDriveModule,
   ],
   controllers: [],
   providers: [],

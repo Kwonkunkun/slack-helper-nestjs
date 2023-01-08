@@ -1,5 +1,19 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "src",
+  "projects": {
+    "google-drive": {
+      "type": "library",
+      "root": "libs/google-drive",
+      "entryFile": "index",
+      "sourceRoot": "libs/google-drive/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/google-drive/tsconfig.lib.json"
+      }
+    }
+  },
+  "compilerOptions": {
+    "webpack": true
+  }
 }
