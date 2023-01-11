@@ -11,8 +11,8 @@ import * as Joi from 'joi';
       isGlobal: true,
       cache: true,
       envFilePath: (() => {
-        console.log(`.env.${process.env.APP_ENV ?? "prod"}`);
-        return `.env.${process.env.APP_ENV ?? "prod"}`;
+        console.log(`.env.${process.env.APP_ENV ?? 'prod'}`);
+        return `.env.${process.env.APP_ENV ?? 'prod'}`;
       })(),
       validationSchema: Joi.object({
         SLACK_TOKEN: Joi.string().required(),

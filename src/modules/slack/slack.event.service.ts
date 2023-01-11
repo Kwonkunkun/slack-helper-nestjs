@@ -1,10 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { MessageEvent } from 'nestjs-slack-listener/dist/slack/interfaces/incoming.interface';
-import {ACTION_ID, HELP_MESSAGE_BLOCK, RULE_MESSAGE_BLOCK} from './slack.constants';
+import {
+  ACTION_ID,
+  HELP_MESSAGE_BLOCK,
+  RULE_MESSAGE_BLOCK,
+} from './slack.constants';
 import { InjectSlackClient, SlackClient } from 'nestjs-slack-listener';
 import { FileNameMainContractService } from '../file-name/file-name.main-contract.service';
 import { FileNameSubContractService } from '../file-name/file-name.sub-contract.service';
-import {CusswordService} from '../cussword/cussword.service';
+import { CusswordService } from '../cussword/cussword.service';
+import { GoogleDriveService } from '@app/google-drive';
 
 @Injectable()
 export class SlackEventService {
@@ -14,6 +19,7 @@ export class SlackEventService {
     private readonly fileNameMainContractService: FileNameMainContractService,
     private readonly fileNameSubContractService: FileNameSubContractService,
     private readonly cusswordService: CusswordService,
+    private readonly googleDriveService: GoogleDriveService,
     @InjectSlackClient()
     private readonly slack: SlackClient,
   ) {}
@@ -57,11 +63,23 @@ export class SlackEventService {
       });
     }
 
-    //도움 명령어라면
-    if (this.isHelpCommand(text)) {
+    //찾기 명령어라면
+    if (this.isFindCommand(text)) {
+      //command 이후의 문자 추출
+      const query = text.replace(/.*(찾기|find)/g, '').trim();
+      const files = await this.googleDriveService.find(query);
+
+      //파일이 없는 경우
+      if (files.length === 0) {
+        return await this.slack.chat.postMessage({
+          channel: event.channel,
+          text: `☹️'${query}'에 해당하는 파일이 없습니다ㅠ`,
+        });
+      }
+
       return await this.slack.chat.postMessage({
         channel: event.channel,
-        blocks: HELP_MESSAGE_BLOCK,
+        blocks: this.googleDriveService.getSlackBlock(files),
       });
     }
 
@@ -73,12 +91,20 @@ export class SlackEventService {
       });
     }
 
+    //도움 명령어라면
+    if (this.isHelpCommand(text)) {
+      return await this.slack.chat.postMessage({
+        channel: event.channel,
+        blocks: HELP_MESSAGE_BLOCK,
+      });
+    }
+
     //욕설이 섞여있다면
     if (this.cusswordService.isCussWord(text)) {
-        return await this.slack.chat.postMessage({
-            channel: event.channel,
-            text: '🫥 욕설은 마라...',
-        });
+      return await this.slack.chat.postMessage({
+        channel: event.channel,
+        text: '🫥 욕설은 마라...',
+      });
     }
 
     //전부 해당되지 않을때
@@ -109,6 +135,14 @@ export class SlackEventService {
    */
   private isRuleCommand(text: string) {
     const regex = /^.*(룰|룰알려주|파일룰|rule).*/g;
+    return regex.test(text);
+  }
+
+  /**
+   * @description 찾기 명령어인지 체크
+   */
+  private isFindCommand(text: string) {
+    const regex = /^.*(찾기|find).*/g;
     return regex.test(text);
   }
 }
