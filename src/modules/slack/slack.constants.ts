@@ -23,7 +23,7 @@ export const HELP_MESSAGE_BLOCK = [
         text: '룰에 맞는 파일 이름인지 테스트 해볼수 있는 기능',
         emoji: true,
       },
-      { type: 'mrkdwn', text: '확인|check `[fileName]`' },
+      { type: 'mrkdwn', text: '확인 `[fileName]`' },
     ],
   },
   {
@@ -34,7 +34,18 @@ export const HELP_MESSAGE_BLOCK = [
         text: '룰을 알려주는 기능',
         emoji: true,
       },
-      { type: 'mrkdwn', text: '룰|룰알려주|파일룰|rule' },
+      { type: 'mrkdwn', text: '룰' },
+    ],
+  },
+  {
+    type: 'section',
+    fields: [
+      {
+        type: 'plain_text',
+        text: 'google drive 파일을 찾을수 있는 기능',
+        emoji: true,
+      },
+      { type: 'mrkdwn', text: '찾기 `[검색명]`' },
     ],
   },
   { type: 'divider' },
@@ -50,34 +61,34 @@ export const HELP_MESSAGE_BLOCK = [
         text: '도움이 필요할때는!',
         emoji: true,
       },
-      { type: 'mrkdwn', text: '도움|help|야|헤이|hey|여' },
+      { type: 'mrkdwn', text: '도움' },
     ],
   },
 ];
 
-export const RULE_MESSAGE_BLOCK =  [
+export const RULE_MESSAGE_BLOCK = [
   {
-    "type": "section",
-    "text": {
-      "type": "mrkdwn",
-      "text": "👇 *룰은 다음과 같아여!*"
-    }
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: '👇 *룰은 다음과 같아여!*',
+    },
   },
   {
-    "type": "divider"
+    type: 'divider',
   },
   {
-    "type": "section",
-    "text": {
-      "type": "mrkdwn",
-      "text": "*[계약서명 규칙]* \n *주계약의 경우* : 계약상대방_계약명_자사명_체결일자 \n *부수계약의 경우* : 계약상대방_본계약명_부속계약명_자사명_체결일자"
-    }
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: '*[계약서명 규칙]* \n *주계약의 경우* : 계약상대방_계약명_자사명_체결일자 \n *부수계약의 경우* : 계약상대방_본계약명_부속계약명_자사명_체결일자',
+    },
   },
   {
-    "type": "section",
-    "text": {
-      "type": "mrkdwn",
-      "text": "*[예시]* \n *주계약* : 솔라원이호_자산양수도계약_솔라에쿼티코리아002_221202 \n *부수계약* : JA솔라_물품공급계약_합의서_엔라이튼_221205"
-    }
-  }
-]
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: '*[예시]* \n *주계약* : 솔라원이호_자산양수도계약_솔라에쿼티코리아002_221202 \n *부수계약* : JA솔라_물품공급계약_합의서_엔라이튼_221205',
+    },
+  },
+];

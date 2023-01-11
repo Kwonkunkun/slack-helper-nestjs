@@ -118,7 +118,7 @@ export class SlackEventService {
    * @description 파일 이름 확인 명령어인지 체크
    */
   private isFileNameCheckCommand(text: string) {
-    const regex = /^.*(확인|check).*/g;
+    const regex = /^.*(확인).*/g;
     return regex.test(text);
   }
 
@@ -126,7 +126,7 @@ export class SlackEventService {
    * @description 도움 명령어인지 체크
    */
   private isHelpCommand(text: string) {
-    const regex = /^.*(도움|help|야|헤이|hey|여).*/g;
+    const regex = /^.*(도움).*/g;
     return regex.test(text);
   }
 
@@ -134,7 +134,7 @@ export class SlackEventService {
    * @description 룰 확인 명령어인지 체크
    */
   private isRuleCommand(text: string) {
-    const regex = /^.*(룰|룰알려주|파일룰|rule).*/g;
+    const regex = /^.*(룰).*/g;
     return regex.test(text);
   }
 
@@ -142,7 +142,7 @@ export class SlackEventService {
    * @description 찾기 명령어인지 체크
    */
   private isFindCommand(text: string) {
-    const regex = /^.*(찾기|find).*/g;
+    const regex = /^.*(찾기).*/g;
     return regex.test(text);
   }
 }
