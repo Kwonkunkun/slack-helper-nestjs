@@ -27,8 +27,7 @@ export class SlackController {
    */
   @SlackEventHandler('message')
   async handleMessage({ event }: any) {
-    //자기 자신일때는 return
-    if ('bot_id' in event) {
+    if (this.slackEventService.isBot(event)) {
       return;
     }
     return await this.slackEventService.handleMessage(event as MessageEvent);
@@ -39,15 +38,15 @@ export class SlackController {
    */
   @SlackEventHandler('app_mention')
   async handleAppMention({ event }: IncomingSlackEvent<MessageEvent>) {
-    //자기 자신일때는 return
-    if ('bot_id' in event) {
+    if (this.slackEventService.isBot(event)) {
       return;
     }
     return await this.slackEventService.handleMessage(event);
   }
 
   /**
-   * @description 파일의 이름을 만드는데 필요한 필드 작성 완료
+   * TODO: 아직 구현 안됨
+   * @description slack interactivity handler
    */
   @SlackInteractivityHandler(ACTION_ID.COMPLETE_FILE_NAMING_QUESTION)
   async handleCompleteFileNamingQuestion({

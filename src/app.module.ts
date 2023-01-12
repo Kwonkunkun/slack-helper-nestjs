@@ -22,7 +22,6 @@ import { GoogleDriveModule } from '@app/google-drive';
     }),
     HealthModule,
     SlackModule,
-    GoogleDriveModule,
   ],
   controllers: [],
   providers: [],

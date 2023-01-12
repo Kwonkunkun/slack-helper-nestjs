@@ -1,15 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { MessageEvent } from 'nestjs-slack-listener/dist/slack/interfaces/incoming.interface';
-import {
-  ACTION_ID,
-  HELP_MESSAGE_BLOCK,
-  RULE_MESSAGE_BLOCK,
-} from './slack.constants';
+import { HELP_MESSAGE_BLOCK, RULE_MESSAGE_BLOCK } from './slack.constants';
 import { InjectSlackClient, SlackClient } from 'nestjs-slack-listener';
 import { FileNameMainContractService } from '../file-name/file-name.main-contract.service';
 import { FileNameSubContractService } from '../file-name/file-name.sub-contract.service';
 import { CusswordService } from '../cussword/cussword.service';
 import { GoogleDriveService } from '@app/google-drive';
+import {
+  generateGoogleDriveSearchSlackBlock,
+  generateMainContractFileNameCheckSlackBlock,
+  generateSubContractFileNameCheckSlackBlock,
+  getAfterText,
+  isCommand,
+} from './slack.util';
 
 @Injectable()
 export class SlackEventService {
@@ -35,16 +38,19 @@ export class SlackEventService {
     const { text } = event;
 
     //파일 이름 확인 명령어라면
-    if (this.isFileNameCheckCommand(text)) {
+    if (isCommand(text, '확인')) {
       //command 이후의 문자 추출
-      const fileName = text.replace(/.*(확인|check)/g, '').trim();
+      const fileName = getAfterText(text, '확인');
 
       this.logger.debug(fileName);
       //주계약의 경우
       if (this.fileNameMainContractService.isValid(fileName)) {
         return await this.slack.chat.postMessage({
           channel: event.channel,
-          blocks: this.fileNameMainContractService.getSlackBlock(fileName),
+          blocks: generateMainContractFileNameCheckSlackBlock(
+            fileName,
+            this.fileNameMainContractService.getFileInfo(fileName),
+          ),
         });
       }
 
@@ -52,7 +58,10 @@ export class SlackEventService {
       if (this.fileNameSubContractService.isValid(fileName)) {
         return await this.slack.chat.postMessage({
           channel: event.channel,
-          blocks: this.fileNameSubContractService.getSlackBlock(fileName),
+          blocks: generateSubContractFileNameCheckSlackBlock(
+            fileName,
+            this.fileNameSubContractService.getFileInfo(fileName),
+          ),
         });
       }
 
@@ -64,9 +73,9 @@ export class SlackEventService {
     }
 
     //찾기 명령어라면
-    if (this.isFindCommand(text)) {
+    if (isCommand(text, '찾기')) {
       //command 이후의 문자 추출
-      const query = text.replace(/.*(찾기|find)/g, '').trim();
+      const query = getAfterText(text, '찾기');
       const files = await this.googleDriveService.find(query);
 
       //파일이 없는 경우
@@ -79,12 +88,12 @@ export class SlackEventService {
 
       return await this.slack.chat.postMessage({
         channel: event.channel,
-        blocks: this.googleDriveService.getSlackBlock(files),
+        blocks: generateGoogleDriveSearchSlackBlock(files),
       });
     }
 
     //룰 확인 명령어라면
-    if (this.isRuleCommand(text)) {
+    if (isCommand(text, '룰')) {
       return await this.slack.chat.postMessage({
         channel: event.channel,
         blocks: RULE_MESSAGE_BLOCK,
@@ -92,7 +101,7 @@ export class SlackEventService {
     }
 
     //도움 명령어라면
-    if (this.isHelpCommand(text)) {
+    if (isCommand(text, '도움')) {
       return await this.slack.chat.postMessage({
         channel: event.channel,
         blocks: HELP_MESSAGE_BLOCK,
@@ -115,34 +124,9 @@ export class SlackEventService {
   }
 
   /**
-   * @description 파일 이름 확인 명령어인지 체크
+   * @description 봇인지 확인하는 함수
    */
-  private isFileNameCheckCommand(text: string) {
-    const regex = /^.*(확인).*/g;
-    return regex.test(text);
-  }
-
-  /**
-   * @description 도움 명령어인지 체크
-   */
-  private isHelpCommand(text: string) {
-    const regex = /^.*(도움).*/g;
-    return regex.test(text);
-  }
-
-  /**
-   * @description 룰 확인 명령어인지 체크
-   */
-  private isRuleCommand(text: string) {
-    const regex = /^.*(룰).*/g;
-    return regex.test(text);
-  }
-
-  /**
-   * @description 찾기 명령어인지 체크
-   */
-  private isFindCommand(text: string) {
-    const regex = /^.*(찾기).*/g;
-    return regex.test(text);
+  isBot(event: MessageEvent) {
+    return 'bot_id' in event;
   }
 }

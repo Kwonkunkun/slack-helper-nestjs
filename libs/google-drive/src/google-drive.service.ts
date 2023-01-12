@@ -19,7 +19,6 @@ export class GoogleDriveService {
   }
 
   /**
-   * TODO: 임시로 테스트하기 위해 전체 드라이브의 데이터로 구현대체, 추후 수정바람
    * @description google share drive 의 리스트를 가져온다.
    */
   async find(query: string) {
@@ -39,41 +38,5 @@ export class GoogleDriveService {
       name: file.name,
       url: file.webViewLink,
     }));
-  }
-
-  /**
-   * @description slack block builder
-   */
-  getSlackBlock(items: { id: string; name: string; url: string }[]) {
-    return [
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: '😀 Google Drive 검색 결과에요!',
-        },
-      },
-      {
-        type: 'divider',
-      },
-      ...items.map(({ name, url }) => ({
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: name,
-        },
-        accessory: {
-          type: 'button',
-          text: {
-            type: 'plain_text',
-            text: '링크로 이동',
-            emoji: true,
-          },
-          value: 'click_me_123',
-          url: `${url}`,
-          action_id: 'button-action',
-        },
-      })),
-    ];
   }
 }
